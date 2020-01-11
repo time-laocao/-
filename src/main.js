@@ -5,6 +5,7 @@ import store from './store'
 import Vant from 'vant'
 // vant的样式  因为在开发的时候不知道用哪个 所以全局注册
 import 'vant/lib/index.css' // 样式文件
+import '@/styles/index.less' // 引入全局自定义样式
 
 import 'amfe-flexible' // 引入自动适配插件
 
