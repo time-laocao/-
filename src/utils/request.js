@@ -3,8 +3,9 @@
 import axios from 'axios' // 引入axios插件
 import JSONBig from 'json-big-int' // 处理大数字插件
 import store from '@/store' // 引入store
+import router from '@/router'
 
-// 创建一个新的 插件实例
+// 创建一个新的 插件实例  crerte：是创建的意思
 const instance = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn/app/v1_0', // 设置一个常量的基础地质
   transfromResponse: [function (data) {
@@ -41,7 +42,50 @@ instance.interceptors.request.use(function (response) {
   } catch (error) {
     return response.data
   }
-}, function (error) {
+}, async function (error) {
+  // 如果拿到token过期的标识
+  // error  config （请求配置） response（响应）
+  let toPath = {
+    path: '/login',
+    query: {
+      redirectUrl: router.currentRouter.path // 当前页面地址  做成数据传到登录页
+      // params(动态路由 /user/：) query（user？id=123）   地址传参
+    }
+  }
+  // 错误代码不一定是401  看项目指定的 数据
+  if (error.response.status === 401) {
+    // 判断本地有没有 refresh_token 续命的标识
+    if (store.state.user.refresh_token) {
+      // 可以续命
+      // 不能在用instance 因为他会在一起走到请求拦截器里 所以要用axios
+      try {
+        let result = await axios({
+          url: 'http://ttapi.research.itcast.cn/app/v1_0/authorizations',
+          headers: {
+            Authorization: `Bearer ${store.state.user.refresh_token}`
+          },
+          method: 'put'
+        })
+        // 将数据同步到vuex 和本地储存
+        store.commit('updateUser', {
+          user: {
+            token: result.data.data.token, // 更新到本地
+            refresh_token: store.state.user.refresh_token
+          }
+        })
+        return instance(error.config) // 将刚才401错误的请求在此发送出去
+      } catch (error) {
+        // refres——token  无法续命  没有不要留着   删掉用户信息 重新登录
+        store.commit('clearUser') // 清空信息
+        // 直接回登录
+        router.path(toPath)
+      }
+    } else {
+      // 否则返回登录页面  当你在一个页面 让你去登录  希望登录之后返回的是之前访问的页面
+      store.commit('clearUser') // 清空信息
+      router.path(toPath)
+    }
+  }
   return Promise.reject(error)
 })
 export default instance // 导出
