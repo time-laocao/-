@@ -45,7 +45,7 @@ export default {
       finished: false, // 是否已经完成全部数据加载
       articles: [], // 定义一个数据来接收上拉加载数据
       downLoading: false, // 是否开启下拉菜单
-      refreshSuccessText: '更新成功', // 文本
+      refreshSuccessText: '', // 文本
       timestamp: null // 定义一个时间戳 这个时间戳用来告诉服务器 现在我们要求什么样的的事件数据
     }
   },
@@ -85,15 +85,31 @@ export default {
       }
     },
     // 下拉刷新
-    onRefresh () {
+    async onRefresh () {
       // 触发下拉刷新
-
-      setTimeout(() => {
-        let arr = Array.from(Array(10), (value, index) => '追加' + (index + 1))
-        this.articles.unshift(...arr) // 将数据添加到队首  unshift ：数组头部插入
-        this.downLoading = false // 关掉下拉状态
-        this.refreshSuccessText = `更新了${arr.length}条数据`
-      }, 1000)
+      // setTimeout(() => {
+      //   let arr = Array.from(Array(10), (value, index) => '追加' + (index + 1))
+      //   this.articles.unshift(...arr) // 将数据添加到队首  unshift ：数组头部插入
+      //   this.downLoading = false // 关掉下拉状态
+      //   this.refreshSuccessText = `更新了${arr.length}条数据`
+      // }, 1000)
+      // 下拉刷新永远都是拉去最新的数据
+      const data = await getArticles({ channel_id: this.channel_id, timestamp: Date.now() })
+      this.downLoading = false
+      // 有可能最心的没有数据
+      if (data.results.length) {
+        // 如果长度大于0 表示有数据
+        this.articles = data.results // 历史数据全部覆盖掉
+        // 假如你之前 已经将上拉 加载设置成了  finished 设置成了true了
+        // 表示我们还要继续往下拉  就系要吧原来的转态再次打开
+        this.finished = false
+        // 获取此次的历史时间戳
+        this.timestamp = data.pre_timestamp
+        this.refreshSuccessText = `更新了${data.results.length}条数据`
+      } else {
+        // 如果没有数据  不需要变化
+        this.refreshSuccessText = '已是最新数据了'
+      }
     }
   }
 }
