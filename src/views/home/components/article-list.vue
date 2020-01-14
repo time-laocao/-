@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { getArticles } from '@/api/article'
 export default {
   name: 'article-list',
   data () {
@@ -56,20 +57,32 @@ export default {
     }
   },
   methods: {
-    onLoad () {
-      setTimeout(() => {
-        if (this.articles.length < 50) {
-          let arr = Array.from(
-            Array(10),
-            (value, index) => this.articles.length + index + 1
-          )
-          this.articles.push(...arr)
-          // 关掉状态
-          this.upLoading = false
-        } else {
-          this.finished = true
-        }
-      }, 1000)
+    async  onLoad () {
+      // setTimeout(() => {
+      //   if (this.articles.length < 50) {
+      //     let arr = Array.from(
+      //       Array(10),
+      //       (value, index) => this.articles.length + index + 1
+      //     )
+      //     this.articles.push(...arr)
+      //     // 关掉状态
+      //     this.upLoading = false
+      //   } else {
+      //     this.finished = true
+      //   }
+      // }, 1000)
+      //   请求数据                                              判断一下时间戳是否为空 是空传当前时间
+      const data = await getArticles({ channel_id: this.channel_id, timestamp: this.timestamp || Date.now() })
+      this.article.push(...data.results)
+      // 关闭下加载状态
+      this.upLoading = false
+      // 判断历史时间戳 如果有有历史表示我还可以继续往下看  否则就不看了
+      if (data.pre_timestamp) {
+        this.timestamp = data.pre_timestamp
+      } else {
+        // 否者没有历史了  木有必要继续加载了
+        this.downLoading = true // 告诉list组件  我已经加载完了 不要再去触发onLoad事件了
+      }
     },
     // 下拉刷新
     onRefresh () {
