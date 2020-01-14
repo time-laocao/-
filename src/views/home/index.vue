@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-van-tabs {
+.van-tabs {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -44,13 +44,13 @@ van-tabs {
       height: 2px;
     }
   }
-  /deep/ .van-tabs__content {
+  /deep/ .van-tabs__content{
     flex: 1;
     overflow: hidden;
   }
-  /deep/ .van-tab__pane {
+  /deep/ .van-tab__pane{
     height: 100%;
-    .scroll-wrapper {
+    .scroll-wrapper{
       height: 100%;
       overflow-y: auto;
     }

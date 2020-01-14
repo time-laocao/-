@@ -1,25 +1,43 @@
 <template>
-  <div class='scroll-wrapper'>>
-      <van-list v-model="upLoading" :finished="finished"  finished-text="没有更多了"  @load="onLoad"></van-list>
+  <!-- 这里注意 这个div设置了滚动条 目的是 给后面做 阅读记忆 留下伏笔 -->
+  <!-- 阅读记忆 => 看文章看到一半 滑到中部 去了别的页面 当你回来时 文章还在你看的位置 -->
+  <div class="scroll-wrapper">
+    <van-list v-model="upLoading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+      <!-- v-for渲染 -->
+      <van-cell v-for="article in articles" :key="article" :title="article"></van-cell>
+    </van-list>
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'article-list',
   data () {
     return {
       upLoading: false, // 是否开启开启上拉加载
-      finished: false // 是否已经完成全部数据加载
+      finished: false, // 是否已经完成全部数据加载
+      articles: [] // 定义一个数据来接收上拉加载数据
     }
   },
   methods: {
     onLoad () {
-
+      setTimeout(() => {
+        if (this.articles.length < 50) {
+          let arr = Array.from(
+            Array(10),
+            (value, index) => this.articles.length + index + 1
+          )
+          this.articles.push(...arr)
+          // 关掉状态
+          this.upLoading = false
+        } else {
+          this.finished = true
+        }
+      }, 1000)
     }
   }
 }
-
 </script>
 
 <style lang="less" scoped>
