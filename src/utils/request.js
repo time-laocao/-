@@ -1,7 +1,7 @@
 // 封装erquest模块
 // 因为要在拦截器里处理 token统一注入 响应数据的统一处理返回 处理大数字
 import axios from 'axios' // 引入axios插件
-import JSONBig from 'json-big-int' // 处理大数字插件
+import JSONBig from 'json-bigint' // 处理大数字插件
 import store from '@/store' // 引入store
 import router from '@/router'
 
@@ -35,7 +35,7 @@ instance.interceptors.request.use(function (config) {
 })
 
 // 响应拦截器    服务器      相应拦截器    then await
-instance.interceptors.request.use(function (response) {
+instance.interceptors.response.use(function (response) {
   //   响应数据   返回的得到响应数据   第一层data是axios里的   第二个data是接口返回的
   try {
     return response.data.data
@@ -48,7 +48,7 @@ instance.interceptors.request.use(function (response) {
   let toPath = {
     path: '/login',
     query: {
-      redirectUrl: router.currentRouter.path // 当前页面地址  做成数据传到登录页
+      redirectUrl: router.currentRoute.path // 当前页面地址  做成数据传到登录页
       // params(动态路由 /user/：) query（user？id=123）   地址传参
     }
   }
