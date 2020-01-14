@@ -12,18 +12,20 @@
             <h3 class="van-ellipsis">{{article.title}}</h3>
             <!-- 三图模式 -->
             <div class="img_box" v-if="article.cover.type === 3">
-              <van-image class="w33" fit="cover"  :src="article.cover.images[0]"  />
-              <van-image class="w33" fit="cover"  :src="article.cover.images[1]"  />
-              <van-image class="w33" fit="cover"  :src="article.cover.images[2]"  />
+              <van-image lazy-load class="w33" fit="cover"  :src="article.cover.images[0]"  />
+              <van-image lazy-load class="w33" fit="cover"  :src="article.cover.images[1]"  />
+              <van-image  lazy-load class="w33" fit="cover"  :src="article.cover.images[2]"  />
             </div>
             <!-- 单图模式 -->
             <div class="img_box"  v-if="article.cover.type === 1">
-              <van-image class="w100" fit="cover" :src="article.cover.images[0]"/>
+              <van-image lazy-load class="w100" fit="cover" :src="article.cover.images[0]"/>
             </div>
             <div class="info_box">
               <span>{{article.aut_name}}</span>
               <span>{{article.comm_count}}</span>
-              <span>{{article.pubdate}}</span>
+              <!-- <span>{{article.pubdate}}</span> -->
+               <!-- 使用过滤器  表达式 | 过滤器名称 -->
+              <span>{{ article.pubdate | relTime}}</span>
               <span class="close">
                 <van-icon name="cross"></van-icon>
               </span>
