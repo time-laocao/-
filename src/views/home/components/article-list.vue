@@ -44,7 +44,15 @@ export default {
       finished: false, // 是否已经完成全部数据加载
       articles: [], // 定义一个数据来接收上拉加载数据
       downLoading: false, // 是否开启下拉菜单
-      refreshSuccessText: '更新成功' // 文本
+      refreshSuccessText: '更新成功', // 文本
+      timestamp: null // 定义一个时间戳 这个时间戳用来告诉服务器 现在我们要求什么样的的事件数据
+    }
+  },
+  props: {
+    channel_id: {
+      type: Number, // 指定type是指定的类型
+      default: null, // default是默认值
+      required: true
     }
   },
   methods: {
