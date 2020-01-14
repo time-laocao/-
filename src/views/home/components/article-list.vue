@@ -58,6 +58,7 @@ export default {
   },
   methods: {
     async  onLoad () {
+      await this.$sleep() // 等待 sleep  resovle
       // setTimeout(() => {
       //   if (this.articles.length < 50) {
       //     let arr = Array.from(
@@ -86,6 +87,7 @@ export default {
     },
     // 下拉刷新
     async onRefresh () {
+      await this.$sleep() // 等待 sleep  resovle
       // 触发下拉刷新
       // setTimeout(() => {
       //   let arr = Array.from(Array(10), (value, index) => '追加' + (index + 1))
