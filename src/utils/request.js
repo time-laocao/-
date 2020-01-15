@@ -8,7 +8,7 @@ import router from '@/router'
 // 创建一个新的 插件实例  crerte：是创建的意思
 const instance = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn/app/v1_0', // 设置一个常量的基础地质
-  transfromResponse: [function (data) {
+  transformResponse: [function (data) {
     // 当后台 响应的字符串 回到axios请求时 就会触发
     // data是一个字符串 吧字符串转化成 对象并且返回 默认的是json.parse
     // 如果data 是一个空字符串  直接转化就会报错
