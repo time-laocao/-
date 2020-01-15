@@ -26,7 +26,9 @@
               <!-- <span>{{article.pubdate}}</span> -->
                <!-- 使用过滤器  表达式 | 过滤器名称 -->
               <span>{{ article.pubdate | relTime}}</span>
-              <span class="close">
+              <!-- 判断是否显示  叉号图标 -->
+              <!-- 点击叉号图标 告诉父组件我要反馈了 -->
+              <span class="close" v-if="user.token" @click="$emit('showAction',article.art_id.toString())">
                 <van-icon name="cross"></van-icon>
               </span>
             </div>
@@ -39,6 +41,7 @@
 
 <script>
 import { getArticles } from '@/api/article'
+import { mapState } from 'vuex'
 export default {
   name: 'article-list',
   data () {
@@ -53,10 +56,13 @@ export default {
   },
   props: {
     channel_id: {
-      type: Number, // 指定type是指定的类型
-      default: null, // default是默认值
-      required: true
+      type: Number, // 指定要传的props的类型
+      required: true, // 要求props必须传
+      default: null // 给props一个默认值
     }
+  },
+  computed: {
+    ...mapState(['user'])
   },
   methods: {
     async  onLoad () {
@@ -84,7 +90,8 @@ export default {
         this.timestamp = data.pre_timestamp
       } else {
         // 否者没有历史了  木有必要继续加载了
-        this.downLoading = true // 告诉list组件  我已经加载完了 不要再去触发onLoad事件了
+        // this.refreshSuccessText = '没有更多了'
+        this.finished = true // 告诉list组件  我已经加载完了 不要再去触发onLoad事件了
       }
     },
     // 下拉刷新

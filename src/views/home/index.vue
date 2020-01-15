@@ -3,33 +3,48 @@
     <van-tabs v-model="activeIndex" swipeable>
       <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
       <!-- 因为一个tab标签  对应一个 -->
-        <article-list :channel_id="channel.id"></article-list>
+      <!-- 要监听子组件事件 就要在子组件标签上 写监听 -->
+        <article-list @showAction="openMoreAction" :channel_id="channel.id"></article-list>
       </van-tab>
     </van-tabs>
     <span class="bar_btn">
       <van-icon name="wap-nav" />
     </span>
+    <!-- 放置弹层 -->
+    <van-popup  :style="{ width: '80%' }" v-model="showMoreAction">
+    <more-action></more-action>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { getMyChannels } from '@/api/channels'
 import ArticleList from './components/article-list'
+import MoreAction from './components/more-action'
 export default {
   name: 'home', // devtools查看组件时  可以看到 对应的name名称
   data () {
     return {
       activeIndex: 0, // 默认启动第0 个标签
-      channels: [] // 频道需要的数据
+      channels: [], // 频道需要的数据
+      showMoreAction: false, // 控制反馈组件显示隐藏
+      articleId: null // 接收文章的ID
+
     }
   },
   components: {
-    ArticleList
+    ArticleList, MoreAction
   },
   methods: {
     async  getMyChannels () {
       let data = await getMyChannels()
       this.channels = data.channels // 更新原来的数据
+    },
+    // 监听子组件事件
+    openMoreAction (artId) {
+      // 监听子组件事件 打开弹层
+      this.showMoreAction = true
+      this.articleId = artId
     }
   },
   created () {
