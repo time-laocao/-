@@ -7,7 +7,8 @@
         <article-list @showAction="openMoreAction" :channel_id="channel.id"></article-list>
       </van-tab>
     </van-tabs>
-    <span class="bar_btn">
+    <!-- 显示编辑频道的图标 -->
+    <span class="bar_btn" @click="showChannelEdit=true">
       <van-icon name="wap-nav" />
     </span>
     <!-- 放置弹层 -->
@@ -17,6 +18,11 @@
     <!-- $event 就是一个参数  为了传参用的 -->
     <more-action @dislike="diclikeOrReport($event,'dislike')" @report="diclikeOrReport($event,'report')"></more-action>
     </van-popup>
+    <!-- 编辑频道 -->
+    <van-action-sheet :round="false" v-model="showChannelEdit" title="编辑频道">
+      <!-- 放置频道编辑组件 -->
+        <channel-edit></channel-edit>
+    </van-action-sheet>
   </div>
 </template>
 
@@ -26,6 +32,7 @@ import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
 import { disLikeArticle, reportArticle } from '@/api/article'
 import eventBus from '@/utils/eventBus'
+import ChannelEdit from './components/channel-edit'
 export default {
   name: 'home', // devtools查看组件时  可以看到 对应的name名称
   data () {
@@ -33,12 +40,13 @@ export default {
       activeIndex: 0, // 默认启动第0 个标签
       channels: [], // 频道需要的数据
       showMoreAction: false, // 控制反馈组件显示隐藏
-      articleId: null // 接收文章的ID
+      articleId: null, // 接收文章的ID
+      showChannelEdit: false // 设置频道编辑的显示或者隐藏
 
     }
   },
   components: {
-    ArticleList, MoreAction
+    ArticleList, MoreAction, ChannelEdit
   },
   methods: {
     async  getMyChannels () {
@@ -96,8 +104,7 @@ export default {
     // operateType 操作类型 dislike /report
     // params 是传输举报类型参数  在传给上面的$event
     async diclikeOrReport (params, operateType) {
-      console.log(params)
-
+      // console.log(params)
       try {
         // 三元表达式   判断是dislike（不感兴趣） 还是 report（举报）
         operateType === 'dislike' ? await disLikeArticle({ target: this.articleId })
@@ -182,5 +189,21 @@ export default {
       font-size: 20px;
     }
   }
+}
+//编辑频道面板样式
+.van-action-sheet {
+  max-height: 100%;
+  height: 100%;
+  .van-action-sheet__header {
+    background: #3296fa;
+    color: #fff;
+    .van-icon-close {
+      color: #fff;
+    }
+  }
+}
+.van-action-sheet .van-action-sheet__header[data-v-5954443c] {
+    background: #f85959;
+    color: #fff;
 }
 </style>

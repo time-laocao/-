@@ -28,6 +28,7 @@ export default {
     }
   },
   created () {
+    // 这行代码的意思就是 在给那个 反馈内容关闭并且返回初始页面
     eventBus.$on('delArticle', () => (this.isReport = false))
   }
 }
