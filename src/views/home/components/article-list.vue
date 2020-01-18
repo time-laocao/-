@@ -28,7 +28,7 @@
               <span>{{ article.pubdate | relTime}}</span>
               <!-- 判断是否显示  叉号图标 -->
               <!-- 点击叉号图标 告诉父组件我要反馈了 -->
-              <span class="close" v-if="user.token" @click="$emit('showAction',article.art_id)">
+              <span class="close" v-if="user.token" @click="$emit('showAction',article.art_id.toString())">
                 <van-icon name="cross"></van-icon>
               </span>
             </div>

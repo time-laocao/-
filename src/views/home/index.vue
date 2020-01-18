@@ -13,7 +13,9 @@
     <!-- 放置弹层 -->
     <van-popup  :style="{ width: '80%' }" v-model="showMoreAction">
     <!-- 包裹反馈组件 -->
-    <more-action @dislike='dislike'></more-action>
+    <!-- report 事件中的第一个参数$event 实际上就是 moreAction组件 传出的type -->
+    <!-- $event 就是一个参数  为了传参用的 -->
+    <more-action @dislike="diclikeOrReport($event,'dislike')" @report="diclikeOrReport($event,'report')"></more-action>
     </van-popup>
   </div>
 </template>
@@ -22,7 +24,7 @@
 import { getMyChannels } from '@/api/channels'
 import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
-import { disLikeArticle } from '@/api/article'
+import { disLikeArticle, reportArticle } from '@/api/article'
 import eventBus from '@/utils/eventBus'
 export default {
   name: 'home', // devtools查看组件时  可以看到 对应的name名称
@@ -48,26 +50,74 @@ export default {
       // 监听子组件事件 打开弹层
       this.showMoreAction = true
       // console.log(artId)
-      this.articleId = artId// 接收不喜欢id
+      this.articleId = artId.toString()// 接收不喜欢id
     },
-    // 调用不喜欢的文章的接口
-    async  dislike () {
-      // console.log(this.articleId)
+    // // 调用不喜欢的文章的接口
+    // async dislike () {
+    //   try {
+    //     await disLikeArticle({ target: this.articleId })
+    //     this.$gnotify({
+    //       type: 'success',
+    //       message: '操作成功'
+    //     })
+    //     // 触发一个事件  发出一个广播 听到广播的文章列表 去删除对应的数据
+    //     // 文章id 频道id
+    //     eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
+    //     this.showMoreAction = false // 关闭弹层
+    //   } catch (error) {
+    //     this.$gnotify({
+    //       type: 'danger',
+    //       message: '操作失败'
+    //     })
+    //   }
+    // },
+    // // 调用举报文章的接口
+    // async report (type) {
+    //   try {
+    //     await reportArticle({ target: this.articleId, type })
+    //     this.$gnotify({
+    //       type: 'success',
+    //       message: '操作成功'
+    //     })
+    //     // 同理也要讲当前的数据删除掉
+    //     // 这个也触发了一个事件 发出广播 听到广播的文章类表 去删除对应的数据
+    //     // 文章id  频道id
+    //     eventBus.$on('delArticle', this.articleId, this.channels[this.activeIndex].id)
+    //     this.showMoreAction = false // 关闭弹层
+    //   } catch (error) {
+    //     this.$gnotify({
+    //       type: 'success',
+    //       message: '操作失败'
+    //     })
+    //   }
+    // },
+
+    // 不喜欢或者举报  把两个功能合并到了一起
+    // operateType 操作类型 dislike /report
+    // params 是传输举报类型参数  在传给上面的$event
+    async diclikeOrReport (params, operateType) {
+      console.log(params)
 
       try {
-        await disLikeArticle({ target: this.articleId })
+        // 三元表达式   判断是dislike（不感兴趣） 还是 report（举报）
+        operateType === 'dislike' ? await disLikeArticle({ target: this.articleId })
+          : await reportArticle({ target: this.articleId, type: params })
         this.$gnotify({
           type: 'success',
           message: '操作成功'
         })
         // 触发一个事件  发出一个广播 听到广播的文章列表 去删除对应的数据
-        // 文章id  频道id
+        // 文章id 频道id
         eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
         this.showMoreAction = false // 关闭弹层
       } catch (error) {
-        this.$gnotify({ type: 'danger', message: '操作失败' })
+        this.$gnotify({
+          type: 'danger',
+          message: '操作失败'
+        })
       }
     }
+
   },
   created () {
     // 刷新
