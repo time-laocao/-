@@ -11,3 +11,11 @@ export function getMyChannels () {
     // data
   })
 }
+/***
+ * 获取所有频道
+ */
+export function getAllChannels () {
+  return request({
+    url: '/channels'
+  })
+}
