@@ -21,7 +21,8 @@
     <!-- 编辑频道 -->
     <van-action-sheet :round="false" v-model="showChannelEdit" title="编辑频道">
       <!-- 放置频道编辑组件 -->
-        <channel-edit :channels="channels"></channel-edit>
+      <!-- 父组件监听选择频道事件 -->
+        <channel-edit @selectChannel="selectChannel" :channels="channels"></channel-edit>
     </van-action-sheet>
   </div>
 </template>
@@ -49,6 +50,12 @@ export default {
     ArticleList, MoreAction, ChannelEdit
   },
   methods: {
+    // 要选择切换到对应的频道 关闭弹层
+    selectChannel (id) {
+      let index = this.channels.findIndex(item => item.id === id) // 获取频道的索引
+      this.activeIndex = index // 将tab激活标签切换到当前对应的标签xia
+      this.showChannelEdit = false // 关闭弹层
+    },
     async  getMyChannels () {
       let data = await getMyChannels()
       this.channels = data.channels // 更新原来的数据

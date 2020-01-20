@@ -10,7 +10,8 @@
       <!-- 可选频道 -->
       <van-grid class="van-hairline--left">
         <van-grid-item v-for="(channel,i) in channels" :key="channel.id">
-          <span class="f12">{{channel.name}}</span>
+          <!-- 告诉父组件我点击了那个频道 -->
+          <span @click="$emit('selectChannel',channel.id)" class="f12">{{channel.name}}</span>
           <!-- tg编辑状态来控制 叉号图标的显示隐藏 -->
           <!-- 先控制第一个推荐频道不能删除 -->
           <template v-if="i!==0" >
