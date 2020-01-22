@@ -22,13 +22,18 @@
     <van-action-sheet :round="false" v-model="showChannelEdit" title="编辑频道">
       <!-- 放置频道编辑组件 -->
       <!-- 父组件监听选择频道事件 -->
-        <channel-edit @delChannel="delChannel" :activeIndex="activeIndex" @selectChannel="selectChannel" :channels="channels"></channel-edit>
+        <channel-edit
+         @addChannel="addChannel"
+         @delChannel="delChannel"
+         :activeIndex="activeIndex"
+          @selectChannel="selectChannel"
+          :channels="channels"></channel-edit>
     </van-action-sheet>
   </div>
 </template>
 
 <script>
-import { getMyChannels, delChannel } from '@/api/channels'
+import { getMyChannels, delChannel, addChannel } from '@/api/channels'
 import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
 import { disLikeArticle, reportArticle } from '@/api/article'
@@ -50,6 +55,11 @@ export default {
     ArticleList, MoreAction, ChannelEdit
   },
   methods: {
+    // 添加频道
+    async  addChannel (channel) {
+      await addChannel(channel) // 完成写入本地缓存的效果
+      this.channels.push(channel) // 这一步是修改data中的数据
+    },
     // 删除频道的方法
     async  delChannel (id) {
       try {
