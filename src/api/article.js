@@ -49,3 +49,27 @@ export function searchArticle (params) {
     params
   })
 }
+/***
+ *
+ *获取文章详情
+ * *****/
+export function getArticleInfo (id) {
+  return request({
+    url: `/articles/${id}`
+  })
+}
+/** *关注用户***/
+export function followUser (data) {
+  return request({
+    url: '/user/followings',
+    method: 'post',
+    data
+  })
+}
+/** *取消关注***/
+export function unFollowUser (target) {
+  return request({
+    method: 'delete',
+    url: `/user/followings/${target}`
+  })
+}
