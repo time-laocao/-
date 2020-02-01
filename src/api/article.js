@@ -73,10 +73,3 @@ export function unFollowUser (target) {
     url: `/user/followings/${target}`
   })
 }
-/** 获取评论**/
-export function getComments (params) {
-  return request({
-    url: '/comments',
-    params
-  })
-}

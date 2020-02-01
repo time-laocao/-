@@ -8,3 +8,9 @@ export function login (data) {
     method: 'post'
   }) //  得到一个promise对象  返回
 }
+/** **获取用户个人信息*****/
+export function getUserInfo () {
+  return request({
+    url: '/user'
+  })
+}
