@@ -24,18 +24,24 @@
         &nbsp;&nbsp;&nbsp;&nbsp;
         <van-button round size="small" :class="{active: article.attitude === 0}" plain icon="delete">不喜欢</van-button>
       </div>
+      <!-- 放置我们评论组件 -->
+      <comment></comment>
     </div>
   </div>
 </template>
 
 <script>
 import { followUser, unFollowUser, getArticleInfo } from '@/api/article'
+import Comment from './components/comment'
 export default {
   data () {
     return {
       article: {}, // 接收文章数据
       followLoading: false // 默认是关闭的
     }
+  },
+  components: {
+    Comment
   },
   methods: {
     // 获取文章详情
@@ -99,6 +105,7 @@ export default {
     position:sticky;
     background-color: #fff;
     top:46px;
+    z-index: 2;
     .text {
       flex: 1;
       padding-left: 10px;

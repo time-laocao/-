@@ -2,7 +2,7 @@
 <!-- 评论类标组件 -->
   <div class="comment">
       <!--列表  上拉加载   loading  是否开启加载状态finshed 是否已经全部加载完成-->
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了">
+    <van-list v-model="loading" :finished="finished"  finished-text="没有更多了">
       <div class="item van-hairline--bottom van-hairline--top" v-for="index in 5" :key="index">
         <van-image
           round
@@ -39,6 +39,7 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
