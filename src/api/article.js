@@ -80,10 +80,11 @@ export function unFollowUser (target) {
 /***
  * 获取评论
  * *****/
-/** 获取评论**/
 export function getComments (params) {
   return request({
-    url: '/comments',
+    url: '/comments', // 请求地址
+    // query参数 放置在params
+    // body参数放置在 data
     params
   })
 }
