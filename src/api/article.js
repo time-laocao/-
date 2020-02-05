@@ -66,10 +66,24 @@ export function followUser (data) {
     data
   })
 }
-/** *取消关注***/
+/**
+ * *
+ * 取消关注
+ *
+ * ***/
 export function unFollowUser (target) {
   return request({
     method: 'delete',
     url: `/user/followings/${target}`
+  })
+}
+/***
+ * 获取评论
+ * *****/
+/** 获取评论**/
+export function getComments (params) {
+  return request({
+    url: '/comments',
+    params
   })
 }
