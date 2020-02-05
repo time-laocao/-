@@ -88,3 +88,13 @@ export function getComments (params) {
     params
   })
 }
+/***
+ * 对文章 评论  或者回复评论
+ * ***/
+export function commentOrReply (data) {
+  return request({
+    url: '/comments', // 请求地址
+    method: 'post', // 请求类型
+    data
+  })
+}
