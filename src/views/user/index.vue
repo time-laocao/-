@@ -59,7 +59,8 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['delUser']), // 映射vuex  mutinons 方法
+    // ...mapMutations(['clearUser']), // 映射vuex  mutinons 方法
+    ...mapMutations(['clearUser']),
     // 获取用户个人信息
     async  getUserInfo () {
       this.userInfo = await getUserInfo() // 数据赋值给当前的userinfo
@@ -72,7 +73,7 @@ export default {
           title: '提示',
           message: '确定要退出登录吗'
         })
-        this.delUser() // 清除用户的token
+        this.clearUser() // 清除用户的token
         this.$router.push('/login') // 跳到登录
       } catch (error) {
 
