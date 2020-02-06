@@ -1,6 +1,6 @@
 <template>
    <div class="container">
-    <van-nav-bar left-arrow @click-left="$router.back()" title="编辑资料" right-text="保存" ></van-nav-bar>
+    <van-nav-bar @click-right="saveUserInfo" left-arrow @click-left="$router.back()" title="编辑资料" right-text="保存" ></van-nav-bar>
     <van-cell-group>
       <van-cell is-link title="头像"  @click="showPhoto=true" center>
         <van-image
@@ -57,7 +57,7 @@
 
 <script>
 import dayjs from 'dayjs'
-import { getUserProfile, updateImg } from '@/api/user' // 引入获取资料的方法
+import { getUserProfile, updateImg, saveUserInfo } from '@/api/user' // 引入获取资料的方法
 export default {
   name: 'profile',
   data () {
@@ -135,6 +135,18 @@ export default {
       // 应该把之地同步的设置给 当前页面数据
       this.user.photo = result.photo // 将上传成功的头像 设置给当前的头像
       this.showPhoto = false
+    },
+    // 保存方法 调用接口  这里是不需要传我们的photo 数据的
+    // 1.我me通过别的方法 更新了头像
+    // 2.要求photo 是bese64 的字符串
+    async  saveUserInfo () {
+      // 保存用户信息
+      try {
+        await saveUserInfo({ ...this.user, photo: null })
+        this.$gnotify({ type: 'success', message: '保存成功' })
+      } catch (error) {
+        this.$gnotify({ type: 'danger', message: '保存失败' })
+      }
     }
 
   },

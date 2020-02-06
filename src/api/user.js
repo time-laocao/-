@@ -34,3 +34,13 @@ export function updateImg (data) {
     data
   })
 }
+/*****
+ * 保存用户个人信心
+ * **/
+export function saveUserInfo (data) {
+  return request({
+    url: '/user/profile',
+    method: 'patch',
+    data
+  })
+}
