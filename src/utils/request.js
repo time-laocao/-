@@ -48,7 +48,7 @@ instance.interceptors.response.use(function (response) {
   let toPath = {
     path: '/login',
     query: {
-      redirectUrl: router.currentRoute.path // 当前页面地址  做成数据传到登录页
+      redirectUrl: router.currentRoute.fullPath// 当前页面地址  做成数据传到登录页
       // params(动态路由 /user/：) query（user？id=123）   地址传参
     }
   }

@@ -23,7 +23,7 @@ const routes = [
       { path: '/', component: Home }, // 二级路由
       { path: '/question', component: Question }, // 二级路由
       { path: '/video', component: Video }, // 二级路由
-      { path: '/views/user', component: User } // 二级路由
+      { path: '/user', component: User } // 二级路由
     ]
   },
   { path: '/user/profile', component: Profile }, // 编辑资料
