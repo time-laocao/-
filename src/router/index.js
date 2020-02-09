@@ -13,6 +13,7 @@ const Profile = () => import('@/views/user/profile') // 编辑资料
 const Chat = () => import('@/views/user/chat') // 小智同学
 const SearchResult = () => import('@/views/search/result') // 搜索结果
 Vue.use(VueRouter)
+// 可以再路由表指定 那个组件缓存信息
 
 const routes = [
   {
@@ -20,7 +21,12 @@ const routes = [
     name: 'home',
     component: Layout, // 一级路由
     children: [
-      { path: '/', component: Home }, // 二级路由
+      { path: '/', // 犹豫 一级路由下  存在二级路由 他们的path相同
+        component: Home,
+        meta: { // meta 属性  存在二级路由并且path相同的情况下需要写到 二级路由下
+          isAlive: true // 是否缓存组件实例
+        }
+      }, // 二级路由
       { path: '/question', component: Question }, // 二级路由
       { path: '/video', component: Video }, // 二级路由
       { path: '/user', component: User } // 二级路由
