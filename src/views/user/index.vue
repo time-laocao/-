@@ -60,10 +60,12 @@ export default {
   },
   methods: {
     // ...mapMutations(['clearUser']), // 映射vuex  mutinons 方法
-    ...mapMutations(['clearUser']),
+    ...mapMutations(['clearUser', 'updatePhoto']),
     // 获取用户个人信息
     async  getUserInfo () {
       this.userInfo = await getUserInfo() // 数据赋值给当前的userinfo
+      // this.userinof 已经是个人资料数据了  这个里面有头像的
+      this.updatePhoto({ photo: this.userInfo.photo }) // 调用mutations方法  里面的就是就是载荷
     },
     // 登出方法
     async  lgout () {

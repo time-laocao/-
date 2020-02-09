@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import dayjs from 'dayjs'
 import { getUserProfile, updateImg, saveUserInfo } from '@/api/user' // 引入获取资料的方法
 export default {
@@ -81,6 +82,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['clearUser', 'updatePhoto']), // 在编辑资料页面引入
     // 绑定按钮事件
     // 用户昵称
     btnName () {
@@ -113,6 +115,8 @@ export default {
     // 获取用户资料的方法
     async  getUserProfile () {
       let data = await getUserProfile()
+      // 将头像地址  更新到设置的公告数据state  中
+      this.updatePhoto({ photo: this.user.photo }) // 载荷数据
       // 将数据赋值给user
       this.user = data
     },
@@ -135,6 +139,8 @@ export default {
       // 应该把之地同步的设置给 当前页面数据
       this.user.photo = result.photo // 将上传成功的头像 设置给当前的头像
       this.showPhoto = false
+      // 当头像上传成功之后   把上传成功的头像地址 在设置给state
+      this.updatePhoto({ photo: this.user.photo }) // 更新用户头像   //调用mutatinos方法
     },
     // 保存方法 调用接口  这里是不需要传我们的photo 数据的
     // 1.我me通过别的方法 更新了头像
