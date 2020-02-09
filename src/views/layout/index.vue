@@ -4,7 +4,10 @@
     <van-nav-bar @click-right="$router.push('/search')" v-if="showNavBar" fixed title="黑马头条" right-text="搜索" />
     <!-- 二级路由容器 首页/问答/视频 /规则/我的-->
     <div class="my-wrapper" :class="{ noTop : !showNavBar }">
-      <router-view></router-view>
+      <!--采用keep-alive 缓存文件 包裹路由容器-->
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
     <!-- 标签栏 -->
     <van-tabbar route>

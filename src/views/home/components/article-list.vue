@@ -1,7 +1,7 @@
 <template>
   <!-- 这里注意 这个div设置了滚动条 目的是 给后面做 阅读记忆 留下伏笔 -->
   <!-- 阅读记忆 => 看文章看到一半 滑到中部 去了别的页面 当你回来时 文章还在你看的位置 -->
-  <div class="scroll-wrapper">
+  <div ref="myScroll" class="scroll-wrapper" @scroll="remeber">
     <!-- 下拉刷新           是否处于加载中状态      事件    -->
     <van-pull-refresh v-model="downLoading" @refresh="onRefresh" :success-text="refreshSuccessText">
       <!-- 上拉加载 -->
@@ -53,7 +53,8 @@ export default {
       articles: [], // 定义一个数据来接收上拉加载数据
       downLoading: false, // 是否开启下拉菜单
       refreshSuccessText: '', // 文本
-      timestamp: null // 定义一个时间戳 这个时间戳用来告诉服务器 现在我们要求什么样的的事件数据
+      timestamp: null, // 定义一个时间戳 这个时间戳用来告诉服务器 现在我们要求什么样的的事件数据
+      scrollTop: 0 // 记录滚动的位置   用该属性记录当前文章实例所滚动的位置
     }
   },
   props: {
@@ -67,7 +68,7 @@ export default {
     ...mapState(['user'])
   },
   created () {
-    // 开启监听
+    // 开启监听  删除文章事件
     eventBus.$on('delArticle', (articleId, channelId) => {
       if (this.channel_id === channelId) {
         // 这个条件表示 该列表就是当前激活的列表
@@ -78,8 +79,34 @@ export default {
         }
       }
     })
+    // 只要开启一次监听   以后触发了时间  就会进入到我们的回调函数
+    // 开启新的监听
+    eventBus.$on('changeTab', id => {
+      // 判断一下id 是否等于 该自检 通过props得到频道id
+      if (id === this.channel_id) {
+        // 如果想等 说明找对了 article——list 实例
+        // 因为article-list是有多个
+        // 为什么这里没有滚动？
+        // 是因为 切换事件之后  会执行 dom的更新  dom的更新就是异步的
+        // 如果保证直接  在上一次完整页面渲染 更新之后  执行逻辑
+        // this。$nextTick  会咋数据 响应式之后  页面渲染完毕之后执行
+        // this。$nextTick 会保证在changetab动作切换完成并且 完成界面渲染之后执行
+        this.$nextTick(() => {
+          if (this.scrollTop && this.$refs.myScroll) {
+            this.$refs.myScroll.scrollTop = this.scrollTop
+          }
+        })
+      }
+    })
   },
   methods: {
+    // 定义一个记录位置的方法
+    // 当绑定事件只写方法名时  第一个参数是 event
+    remeber (event) {
+      // 记录此次滚动事件中的滚动条距离顶部的高度
+      // event.target 指的是当前事件取法的元素
+      this.scrollTop = event.target.scrollTop // 记录位置
+    },
     async  onLoad () {
       await this.$sleep() // 等待 sleep  resovle
       // setTimeout(() => {
@@ -137,6 +164,12 @@ export default {
         this.refreshSuccessText = '已是最新数据了'
       }
     }
+  },
+  // 激活函数   当组件被keep-alvie包裹  后面的组件也会被缓存
+  activated () {
+    // 唤醒的时候 需要 把记录的位置回复回去
+    // 需要在组件重新激活的时候， 重新 设置原来的位置
+    if (this.scrollTop && this.$refs.myScroll) { this.$refs.myScroll.scrollTop = this.scrollTop } // 将原来记录的位置赋值给domyuansu
   }
 }
 </script>
